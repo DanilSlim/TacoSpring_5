@@ -1,20 +1,28 @@
-package tacos;
+package tacos.jpa;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-
-public class Order {
+@Entity
+@Table(name = "Taco_Order")
+public class OrderJPA {
 	
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	private Date placedAt;
@@ -45,11 +53,16 @@ public class Order {
 	@Digits(integer=3, fraction=0, message="Invalid CVV")
 	private String ccCVV;
 	
+	@ManyToMany(targetEntity = TacoJPA.class,mappedBy = "ingredients")
+	private List<TacoJPA> tacos = new ArrayList<>();
 	
-	private List<Taco> tacos = new ArrayList<>();
 	
-	
-	
+	//For JPA using. Call  before Entity will be persist 
+	@PrePersist
+	private void placedAt() {
+		
+		this.placedAt=new Date();
+	}
 	
 	
 	public Long getId() {
@@ -68,13 +81,13 @@ public class Order {
 		this.placedAt = placedAt;
 	}
 
-	public void addDesign(Taco design) {
+	public void addDesign(TacoJPA design) {
 		
 		this.tacos.add(design);
 		
 	}
 	
-	public List<Taco> getTacos(){
+	public List<TacoJPA> getTacos(){
 		
 		return this.tacos ;
 	}
@@ -167,7 +180,7 @@ public class Order {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Order other = (Order) obj;
+		OrderJPA other = (OrderJPA) obj;
 		if (ccCVV == null) {
 			if (other.ccCVV != null)
 				return false;
@@ -213,7 +226,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [name=" + name + ", street=" + street + ", city=" + city + ", state=" + state + ", zip=" + zip
+		return "OrderJPA [name=" + name + ", street=" + street + ", city=" + city + ", state=" + state + ", zip=" + zip
 				+ ", ccNumber=" + ccNumber + ", ccExpiration=" + ccExpiration + ", ccCVV=" + ccCVV + "]";
 	}
 	

@@ -10,10 +10,10 @@
 
 <body>
 
-	<form method="POST" th:action="@{/ordersjdbc}" th:object="${order}">
+	<form method="POST" th:action="@{/ordersjpa}" th:object="${orderjpa}">
 		<h1>Order your taco creations!</h1>
 			<img th:src="@{/images/Horn.png}"/>
-			<a th:href="@{/designjdbc}" id="another">Design another taco</a><br/>
+			<a th:href="@{/designjpa}" id="another">Design another taco</a><br/>
 		<div th:if="${#fields.hasErrors()}">
 			<span class="validationError">
 				Please correct the problems below and resubmit.

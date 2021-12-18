@@ -1,15 +1,25 @@
-package tacos;
+package tacos.jpa;
 
 import java.util.Date;
 import java.util.List;
 
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
-public class Taco {
+@Entity
+@Table(name = "Taco")
+public class TacoJPA {
 	
 	
 	@NotNull
@@ -18,24 +28,35 @@ public class Taco {
 	
 	
 	
-	
+	@ManyToMany(targetEntity = IngredientJPA.class)
+	@JoinTable(name="Taco_Ingredients",
+				joinColumns=@JoinColumn(name="taco"),
+				inverseJoinColumns = @JoinColumn(name="ingredient"))
 	@NotEmpty(message = "You must choose at least 1 ingredient")
 	@Size(min = 1, message="Name must be at least 1 ingredient")
-	private List<Ingredient> ingredients;
+	private List<IngredientJPA> ingredients;
 	
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@Column(name="ID")
 	private Long id;
 	
+	@Column(name = "CREATEDAT")
 	private Date createdAt;
 	
 	
-	
+	//For JPA using. Call  before Entity will be persist 
+	@PrePersist
+	private void createdAt() {
+		
+		this.createdAt=new Date();
+	}
 
 	public String getName() {
 		return name;
 	}
 
-	public List<Ingredient> getIngredients() {
+	public List<IngredientJPA> getIngredients() {
 		return ingredients;
 	}
 
@@ -51,7 +72,7 @@ public class Taco {
 		this.name = name;
 	}
 
-	public void setIngredients(List<Ingredient> ingredients) {
+	public void setIngredients(List<IngredientJPA> ingredients) {
 		this.ingredients = ingredients;
 	}
 
@@ -82,7 +103,7 @@ public class Taco {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Taco other = (Taco) obj;
+		TacoJPA other = (TacoJPA) obj;
 		if (createdAt == null) {
 			if (other.createdAt != null)
 				return false;

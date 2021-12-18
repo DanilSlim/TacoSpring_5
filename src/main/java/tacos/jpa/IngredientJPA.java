@@ -1,22 +1,46 @@
-package tacos;
+package tacos.jpa;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
-public class Ingredient {
+@Entity
+@Table(name = "Ingredient")
+public class IngredientJPA {
 	
-
+	@Id //For JPA using
 	private final String id;
 	
 	private final String name;
 	
+	@Transient
 	private boolean checked=false;
 	
+	@Enumerated(EnumType.STRING)
 	private final Type type;
 	
 	public static enum Type {
 	WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
 	}
 	
-	public Ingredient (String id,String name, Type type) {
+	
+	//JPA требует конструктор по умолчанию
+	@SuppressWarnings("unused")
+	private IngredientJPA() {
+		
+		this.id=null;
+		this.name=null;
+		this.checked=false;
+		this.type=null;
+	}
+	
+	
+	
+	
+	public IngredientJPA (String id,String name, Type type) {
 		
 		this.id=id;
 		
@@ -67,7 +91,7 @@ public class Ingredient {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Ingredient other = (Ingredient) obj;
+		IngredientJPA other = (IngredientJPA) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
