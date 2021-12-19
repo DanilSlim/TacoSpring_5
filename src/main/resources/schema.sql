@@ -38,7 +38,19 @@ tacoOrder bigint not null,
 taco bigint not null
 );
 
+create table if not exists users (
+username varchar(20) not null,
+password varchar(20) not null,
+enabled boolean 
+);
+
+create table  if not exists authorities(
+username varchar(20) not null,
+authority varchar(20) not null
+);
+
 alter table Taco_Order_Tacos
 add foreign key (tacoOrder) references Taco_Order(id);
 alter table Taco_Order_Tacos
 add foreign key (taco) references Taco(id);
+

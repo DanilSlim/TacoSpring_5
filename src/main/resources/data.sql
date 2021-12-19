@@ -5,7 +5,6 @@ delete from Taco_Order;
 delete from Ingredient;
 
 insert into Ingredient (id, name, type)
-
 values ('FLTO', 'Flour Tortilla', 'WRAP');
 insert into Ingredient (id, name, type)
 values ('COTO', 'Corn Tortilla', 'WRAP');
@@ -25,3 +24,10 @@ insert into Ingredient (id, name, type)
 values ('SLSA', 'Salsa', 'SAUCE');
 insert into Ingredient (id, name, type)
 values ('SRCR', 'Sour Cream', 'SAUCE');
+
+
+insert into users (username, password, enabled)
+values ('buzzy', '{noop}coco', true);
+
+insert into authorities (username, authority)
+values ('buzzy', 'ROLE_ADMIN');
