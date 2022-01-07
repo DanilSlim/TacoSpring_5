@@ -49,6 +49,19 @@ username varchar(20) not null,
 authority varchar(20) not null
 );
 
+create table if not exists Person (
+
+id identity,
+username varchar(20) not null,
+password varchar(80) not null,
+fullname varchar(20),
+street varchar(60),
+city varchar(20),
+state varchar(20),
+zip varchar(10),
+phone varchar(20)
+);
+
 alter table Taco_Order_Tacos
 add foreign key (tacoOrder) references Taco_Order(id);
 alter table Taco_Order_Tacos
