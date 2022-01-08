@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
@@ -17,47 +20,63 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import tacos.security.User;
+
 @Entity
 @Table(name = "Taco_Order")
 public class OrderJPA {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name = "placedat")
 	private Date placedAt;
 	
 	
 	
+	@Column(name = "deliveryname")
 	@NotBlank(message="Name is required")
 	private String name;
 	
+	@Column(name = "deliverystreet")
 	@NotBlank(message="Street is required")
 	private String street;
 	
+	@Column(name = "deliverycity")
 	@NotBlank(message="City is required")
 	private String city;
 	
+	@Column(name = "deliverystate")
 	@NotBlank(message="State is required")
 	private String state;
 	
+	@Column(name = "deliveryzip")
 	@NotBlank(message="Zip code is required")
 	private String zip;
 	
+	@Column(name = "ccnumber")
 	@CreditCardNumber(message="Not a valid credit card number")
 	private String ccNumber;
 	
+	@Column(name = "ccexpiration")
 	@Pattern(regexp="^(0[1-9]|1[0-2])([\\/])([1-9][0-9])$", message="Must be formatted MM/YY")
 	private String ccExpiration;
 	
 	@Digits(integer=3, fraction=0, message="Invalid CVV")
 	private String ccCVV;
 	
-	@ManyToMany(targetEntity = TacoJPA.class,mappedBy = "ingredients")
+	@ManyToMany(targetEntity = TacoJPA.class)
 	private List<TacoJPA> tacos = new ArrayList<>();
 	
 	
+	@ManyToOne(targetEntity = User.class)
+	@JoinColumn(name = "person")
+	private User user;
+	
+	
 	//For JPA using. Call  before Entity will be persist 
+	@Column(name = "placedat")
 	@PrePersist
 	private void placedAt() {
 		
@@ -124,6 +143,11 @@ public class OrderJPA {
 	public String getCcCVV() {
 		return ccCVV;
 	}
+	
+	public User getUser() {
+		return user;
+	}
+	
 
 	public void setName(String name) {
 		this.name = name;
@@ -156,6 +180,12 @@ public class OrderJPA {
 	public void setCcCVV(String ccCVV) {
 		this.ccCVV = ccCVV;
 	}
+	
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 
 	@Override
 	public int hashCode() {
